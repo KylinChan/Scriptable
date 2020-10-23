@@ -1,7 +1,7 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: magic;
-// Created by Enjoyee at https://github.com/Enjoyee/Scriptable
+// Created by Enjoyee @ https://github.com/Enjoyee/Scriptable
 // Modified by Samuel Shi on 2020-10-23
 
 /*
@@ -674,15 +674,15 @@ function phoneSizes() {
       底部: 1488,
     },
 
-    1792: {
-      小号: 338,
-      中号: 720,
-      大号: 758,
-      左边: 54,
-      右边: 436,
-      顶部: 160,
-      中间: 580,
-      底部: 1000,
+    2532: {
+      小号: 472,
+      中号: 1012,
+      大号: 1062,
+      左边: 78,
+      右边: 618,
+      顶部: 230,
+      中间: 818,
+      底部: 1408,
     },
 
     2436: {
@@ -705,6 +705,28 @@ function phoneSizes() {
       顶部: 114,
       中间: 696,
       底部: 1278,
+    },
+
+    1792: {
+      小号: 338,
+      中号: 720,
+      大号: 758,
+      左边: 54,
+      右边: 436,
+      顶部: 160,
+      中间: 580,
+      底部: 1000,
+    },
+
+    1624: {
+      小号: 310,
+      中号: 658,
+      大号: 690,
+      左边: 46,
+      右边: 394,
+      顶部: 142,
+      中间: 522,
+      底部: 902,
     },
 
     1334: {
