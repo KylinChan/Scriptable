@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: purple; icon-glyph: magic;
 // Created by Enjoyee at https://github.com/Enjoyee/Scriptable
-// Modified by Samuel Shi on 2020-10-22
+// Modified by Samuel Shi on 2020-10-23
 
 /*
  **************************************
@@ -64,8 +64,8 @@ const greetingText = {
   eveningGreeting: "🐳 𝐺𝑜𝑜𝑑 𝑒𝑣𝑒𝑛𝑖𝑛𝑔~",
 };
 
-// 天气对应的icon
-const weatherIcos = {
+// 离线天气图标
+const weatherCacheIcons = {
   SUNRISE: "sunrise.fill", // 日出
   CLEAR_DAY: "sun.max.fill", // 晴（白天） CLEAR_DAY
   CLEAR_NIGHT: "sun.max.fill", // 晴（夜间） CLEAR_NIGHT
@@ -88,6 +88,30 @@ const weatherIcos = {
   SAND: "cloud.dust.fill", // 沙尘  SAND
   WIND: "cloud.wind.fill", // 大风  WIND
   SUNSET: "sunset.fill", // 日落
+};
+
+// 在线天气图标
+const weatherIcons = {
+  CLEAR_DAY: "http://worldweather.wmo.int/images/24a.png", // 晴（白天） CLEAR_DAY
+  CLEAR_NIGHT: "http://worldweather.wmo.int/images/24b.png", // 晴（夜间） CLEAR_NIGHT
+  PARTLY_CLOUDY_DAY: "http://worldweather.wmo.int/images/23a.png", // 多云（白天）  PARTLY_CLOUDY_DAY
+  PARTLY_CLOUDY_NIGHT: "http://worldweather.wmo.int/images/23b.png", // 多云（夜间）  PARTLY_CLOUDY_NIGHT
+  CLOUDY: "http://worldweather.wmo.int/images/20.png", // 阴  CLOUDY
+  LIGHT_HAZE: "http://worldweather.wmo.int/images/17.png", // 轻度雾霾   LIGHT_HAZE
+  MODERATE_HAZE: "http://worldweather.wmo.int/images/18.png", // 中度雾霾  MODERATE_HAZE
+  HEAVY_HAZE: "http://worldweather.wmo.int/images/19.png", // 重度雾霾   HEAVY_HAZE
+  LIGHT_RAIN: "http://worldweather.wmo.int/images/15.png", // 小雨 LIGHT_RAIN
+  MODERATE_RAIN: "http://worldweather.wmo.int/images/14.png", // 中雨 MODERATE_RAIN
+  HEAVY_RAIN: "http://worldweather.wmo.int/images/12.png", // 大雨  HEAVY_RAIN
+  STORM_RAIN: "http://worldweather.wmo.int/images/9.png", // 暴雨 STORM_RAIN
+  FOG: "http://worldweather.wmo.int/images/16.png", // 雾 FOG
+  LIGHT_SNOW: "http://worldweather.wmo.int/images/7.png", // 小雪  LIGHT_SNOW
+  MODERATE_SNOW: "http://worldweather.wmo.int/images/5.png", // 中雪 MODERATE_SNOW
+  HEAVY_SNOW: "http://worldweather.wmo.int/images/6.png", // 大雪  HEAVY_SNOW
+  STORM_SNOW: "http://worldweather.wmo.int/images/4.png", // 暴雪 STORM_SNOW
+  DUST: "http://worldweather.wmo.int/images/1.png", // 浮尘  DUST
+  SAND: "http://worldweather.wmo.int/images/1.png", // 沙尘  SAND
+  WIND: "http://worldweather.wmo.int/images/26.png", // 大风  WIND
 };
 
 // 天气信息控制
@@ -267,8 +291,8 @@ if (scheduleSize > 0) {
 
     const scheduleStack = horizontallyCenterStack(leftStack);
     // 图片
-    const img = getSFIco("megaphone");
-    // 展示ico
+    const img = SFSymbol.named("megaphone").image;
+    // 展示图标
     addStyleImg(scheduleStack, 0, img, 12, 12, schedulePoetryColor);
     scheduleStack.addSpacer(4);
 
@@ -298,17 +322,17 @@ if (scheduleSize > 0) {
   }
 } else {
   // 添加今日诗词
-  leftStack.addSpacer(4);
+  leftStack.addSpacer(8);
   const poetryStack = leftStack.addStack();
   // 诗词背景
   poetryStack.backgroundColor = new Color("#666", 0.5);
   poetryStack.cornerRadius = 4;
   poetryStack.layoutVertically();
-  poetryStack.addSpacer(2);
+  poetryStack.addSpacer(4);
   //
   const poetryInfoStack = poetryStack.addStack();
   poetryInfoStack.layoutHorizontally();
-  poetryInfoStack.addSpacer(2);
+  poetryInfoStack.addSpacer(4);
   const poetryInfo = poetry.data;
   // 添加显示诗词
   const poetryContent = `"${poetryInfo.content.substring(
@@ -338,8 +362,8 @@ if (scheduleSize > 0) {
     Font.systemFont(11),
     schedulePoetryColor
   );
-  authStack.addSpacer(20);
-  poetryStack.addSpacer(2);
+  authStack.addSpacer(4);
+  poetryStack.addSpacer(4);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -357,7 +381,13 @@ rightStack.layoutVertically();
 // 天气Icon
 const weatherStack = alignRightStack(rightStack);
 weatherStack.bottomAlignContent();
-let weatherImg = getSFIco(weatherInfo.weatherIco);
+try {
+  let weatherImg = await getImage(weatherInfo.weatherIcon);
+  log("在线天气图标获取成功");
+} catch (e) {
+  let weatherImg = SFSymbol.named(weatherInfo.weatherIcon).image;
+  log("离线天气图标获取成功");
+}
 // 显示天气
 addStyleImg(weatherStack, 0, weatherImg, 32, 32);
 // 体感温度
@@ -472,7 +502,7 @@ if (weatherControl.SUNRISE_SUNSET) {
   symbolStack.addSpacer();
   symbolStack.bottomAlignContent();
   // 添加日出icon
-  let sunriseImg = getSFIco(weatherIcos.SUNRISE);
+  let sunriseImg = SFSymbol.named("sunrise.fill").image;
   addStyleImg(symbolStack, 0, sunriseImg, 15, 15);
   symbolStack.addSpacer(4);
   // 日出时间 / 样式
@@ -488,7 +518,7 @@ if (weatherControl.SUNRISE_SUNSET) {
   // 日落
   symbolStack.addSpacer(4);
   // 添加日落icon
-  let sunsetImg = getSFIco(weatherIcos.SUNSET);
+  let sunsetImg = SFSymbol.named("sunset.fill").image;
   addStyleImg(symbolStack, 0, sunsetImg, 15, 15);
   symbolStack.addSpacer(4);
   // 日落时间 / 样式
@@ -856,7 +886,7 @@ async function getWeather() {
     const DOMAIN = `https://api.caiyunapp.com/v2.5/${apiKey}/${location.longitude},${location.latitude}/weather.json?alert=true`;
     const weatherJsonData = await getJson(DOMAIN);
     if (weatherJsonData.status == "ok") {
-      log("天气数据请求成功");
+      log("在线天气数据获取成功");
       // 将获得的天气数据写入缓存
       files.writeString(weatherCache, JSON.stringify(weatherJsonData));
 
@@ -881,10 +911,10 @@ async function getWeather() {
       log("体感温度==>" + bodyFeelingTemperature);
       weatherInfo.bodyFeelingTemperature = Math.round(bodyFeelingTemperature);
 
-      // 天气状况 weatherIcos[weatherIco]
+      // 天气状况 weatherIcons[weatherIcon]
       const weather = weatherJsonData.result.realtime.skycon;
-      log("天气状况==>" + weather + "|" + weatherIcos[weather]);
-      weatherInfo.weatherIco = weatherIcos[weather];
+      log("天气状况==>" + weather + "|" + weatherIcons[weather]);
+      weatherInfo.weatherIcon = weatherIcons[weather];
 
       // 天气描述
       const weatherDesc = weatherJsonData.result.forecast_keypoint;
@@ -928,7 +958,7 @@ async function getWeather() {
     if (cacheExists) {
       // 读取天气数据缓存
       const cache = files.readString(weatherCache);
-      log("天气缓存数据读取成功");
+      log("天气缓存数据获取成功");
       // 转换天气数据为JSON格式
       const weatherJsonData = JSON.parse(cache);
 
@@ -953,10 +983,10 @@ async function getWeather() {
       log("体感温度==>" + bodyFeelingTemperature);
       weatherInfo.bodyFeelingTemperature = Math.round(bodyFeelingTemperature);
 
-      // 天气状况 weatherIcos[weatherIco]
+      // 天气状况 weatherCacheIcons[weatherCacheIcon]
       const weather = weatherJsonData.result.realtime.skycon;
-      log("天气状况==>" + weather + "|" + weatherIcos[weather]);
-      weatherInfo.weatherIco = weatherIcos[weather];
+      log("天气状况==>" + weather + "|" + weatherCacheIcons[weather]);
+      weatherInfo.weatherIcon = weatherCacheIcons[weather];
 
       // 天气描述
       const weatherDesc = weatherJsonData.result.forecast_keypoint;
@@ -1150,15 +1180,6 @@ async function getJson(url) {
 
 /*
  **************************************
- * 获取icon
- **************************************
- */
-function getSFIco(batteryKey) {
-  return SFSymbol.named(batteryKey).image;
-}
-
-/*
- **************************************
  * 空气质量指标
  **************************************
  */
@@ -1327,4 +1348,15 @@ function num2Str(num) {
   } else {
     return `${num}`;
   }
+}
+
+/*
+ **************************************
+ * 网络请求获取图片
+ **************************************
+ */
+async function getImage(url) {
+  const request = new Request(url);
+  const data = await request.loadImage();
+  return data;
 }
