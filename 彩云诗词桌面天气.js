@@ -183,6 +183,8 @@ const widget = new ListWidget();
 /****************************小组件内容START****************************/
 // 彩云天气信息
 const weatherInfo = await getWeather();
+// 天气信息图标
+const weatherInfoIcon = await getWeatherIcon();
 // 农历信息
 const lunarInfo = await getLunar();
 // 今日诗词
@@ -383,7 +385,7 @@ const weatherStack = alignRightStack(rightStack);
 weatherStack.bottomAlignContent();
 
 // 显示天气
-addStyleImg(weatherStack, 0, getWeatherIcon(), 32, 32);
+addStyleImg(weatherStack, 0, weatherInfoIcon, 32, 32);
 // 体感温度
 weatherStack.addSpacer(4);
 const bodyFeelingTemperature = weatherInfo.bodyFeelingTemperature;
