@@ -64,6 +64,30 @@ const greetingText = {
   eveningGreeting: "🐳 𝐺𝑜𝑜𝑑 𝑒𝑣𝑒𝑛𝑖𝑛𝑔~",
 };
 
+// 在线天气图标
+const weatherIcons = {
+  CLEAR_DAY: "http://worldweather.wmo.int/images/24a.png", // 晴（白天） CLEAR_DAY
+  CLEAR_NIGHT: "http://worldweather.wmo.int/images/24b.png", // 晴（夜间） CLEAR_NIGHT
+  PARTLY_CLOUDY_DAY: "http://worldweather.wmo.int/images/23a.png", // 多云（白天）  PARTLY_CLOUDY_DAY
+  PARTLY_CLOUDY_NIGHT: "http://worldweather.wmo.int/images/23b.png", // 多云（夜间）  PARTLY_CLOUDY_NIGHT
+  CLOUDY: "http://worldweather.wmo.int/images/20.png", // 阴  CLOUDY
+  LIGHT_HAZE: "http://worldweather.wmo.int/images/17.png", // 轻度雾霾   LIGHT_HAZE
+  MODERATE_HAZE: "http://worldweather.wmo.int/images/18.png", // 中度雾霾  MODERATE_HAZE
+  HEAVY_HAZE: "http://worldweather.wmo.int/images/19.png", // 重度雾霾   HEAVY_HAZE
+  LIGHT_RAIN: "http://worldweather.wmo.int/images/15.png", // 小雨 LIGHT_RAIN
+  MODERATE_RAIN: "http://worldweather.wmo.int/images/14.png", // 中雨 MODERATE_RAIN
+  HEAVY_RAIN: "http://worldweather.wmo.int/images/12.png", // 大雨  HEAVY_RAIN
+  STORM_RAIN: "http://worldweather.wmo.int/images/9.png", // 暴雨 STORM_RAIN
+  FOG: "http://worldweather.wmo.int/images/16.png", // 雾 FOG
+  LIGHT_SNOW: "http://worldweather.wmo.int/images/7.png", // 小雪  LIGHT_SNOW
+  MODERATE_SNOW: "http://worldweather.wmo.int/images/5.png", // 中雪 MODERATE_SNOW
+  HEAVY_SNOW: "http://worldweather.wmo.int/images/6.png", // 大雪  HEAVY_SNOW
+  STORM_SNOW: "http://worldweather.wmo.int/images/4.png", // 暴雪 STORM_SNOW
+  DUST: "http://worldweather.wmo.int/images/1.png", // 浮尘  DUST
+  SAND: "http://worldweather.wmo.int/images/1.png", // 沙尘  SAND
+  WIND: "http://worldweather.wmo.int/images/26.png", // 大风  WIND
+};
+
 // 离线天气图标
 const weatherCacheIcons = {
   SUNRISE: "sunrise.fill", // 日出
@@ -88,30 +112,6 @@ const weatherCacheIcons = {
   SAND: "cloud.dust.fill", // 沙尘  SAND
   WIND: "cloud.wind.fill", // 大风  WIND
   SUNSET: "sunset.fill", // 日落
-};
-
-// 在线天气图标
-const weatherIcons = {
-  CLEAR_DAY: "http://worldweather.wmo.int/images/24a.png", // 晴（白天） CLEAR_DAY
-  CLEAR_NIGHT: "http://worldweather.wmo.int/images/24b.png", // 晴（夜间） CLEAR_NIGHT
-  PARTLY_CLOUDY_DAY: "http://worldweather.wmo.int/images/23a.png", // 多云（白天）  PARTLY_CLOUDY_DAY
-  PARTLY_CLOUDY_NIGHT: "http://worldweather.wmo.int/images/23b.png", // 多云（夜间）  PARTLY_CLOUDY_NIGHT
-  CLOUDY: "http://worldweather.wmo.int/images/20.png", // 阴  CLOUDY
-  LIGHT_HAZE: "http://worldweather.wmo.int/images/17.png", // 轻度雾霾   LIGHT_HAZE
-  MODERATE_HAZE: "http://worldweather.wmo.int/images/18.png", // 中度雾霾  MODERATE_HAZE
-  HEAVY_HAZE: "http://worldweather.wmo.int/images/19.png", // 重度雾霾   HEAVY_HAZE
-  LIGHT_RAIN: "http://worldweather.wmo.int/images/15.png", // 小雨 LIGHT_RAIN
-  MODERATE_RAIN: "http://worldweather.wmo.int/images/14.png", // 中雨 MODERATE_RAIN
-  HEAVY_RAIN: "http://worldweather.wmo.int/images/12.png", // 大雨  HEAVY_RAIN
-  STORM_RAIN: "http://worldweather.wmo.int/images/9.png", // 暴雨 STORM_RAIN
-  FOG: "http://worldweather.wmo.int/images/16.png", // 雾 FOG
-  LIGHT_SNOW: "http://worldweather.wmo.int/images/7.png", // 小雪  LIGHT_SNOW
-  MODERATE_SNOW: "http://worldweather.wmo.int/images/5.png", // 中雪 MODERATE_SNOW
-  HEAVY_SNOW: "http://worldweather.wmo.int/images/6.png", // 大雪  HEAVY_SNOW
-  STORM_SNOW: "http://worldweather.wmo.int/images/4.png", // 暴雪 STORM_SNOW
-  DUST: "http://worldweather.wmo.int/images/1.png", // 浮尘  DUST
-  SAND: "http://worldweather.wmo.int/images/1.png", // 沙尘  SAND
-  WIND: "http://worldweather.wmo.int/images/26.png", // 大风  WIND
 };
 
 // 天气信息控制
@@ -378,18 +378,12 @@ rightStack.layoutVertically();
 //////////////////////////////////////////
 
 //////////////////////////////////////////
-// 天气Icon
+// 天气图标
 const weatherStack = alignRightStack(rightStack);
 weatherStack.bottomAlignContent();
-try {
-  let weatherImg = await getImage(weatherInfo.weatherIcon);
-  log("在线天气图标获取成功");
-} catch (e) {
-  let weatherImg = SFSymbol.named(weatherInfo.weatherIcon).image;
-  log("离线天气图标获取成功");
-}
+
 // 显示天气
-addStyleImg(weatherStack, 0, weatherImg, 32, 32);
+addStyleImg(weatherStack, 0, getWeatherIcon(), 32, 32);
 // 体感温度
 weatherStack.addSpacer(4);
 const bodyFeelingTemperature = weatherInfo.bodyFeelingTemperature;
@@ -1359,4 +1353,20 @@ async function getImage(url) {
   const request = new Request(url);
   const data = await request.loadImage();
   return data;
+}
+
+/*
+ **************************************
+ * 获取天气图标
+ **************************************
+ */
+async function getWeatherIcon() {
+  try {
+    const weatherIconImg = await getImage(weatherInfo.weatherIcon);
+    log("在线天气图标获取成功");
+  } catch (e) {
+    const weatherIconImg = SFSymbol.named(weatherInfo.weatherIcon).image;
+    log("离线天气图标获取成功");
+  }
+  return weatherIconImg;
 }
