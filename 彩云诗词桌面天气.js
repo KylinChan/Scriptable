@@ -1364,9 +1364,10 @@ async function getWeatherIcon() {
   try {
     const weatherIconImg = await getImage(weatherInfo.weatherIcon);
     log("在线天气图标获取成功");
+    return weatherIconImg;
   } catch (e) {
     const weatherIconImg = SFSymbol.named(weatherInfo.weatherIcon).image;
     log("离线天气图标获取成功");
+    return weatherIconImg;
   }
-  return weatherIconImg;
 }
