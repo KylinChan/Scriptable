@@ -917,18 +917,30 @@ async function getWeather() {
       const humidity =
         parseInt(weatherJsonData.result.realtime.humidity * 100) + "%";
       log("相对湿度==>" + humidity);
-      weatherInfo.humidity = humidity;
+      if (humidity.length < 3) {
+        weatherInfo.humidity = "\x20\x20\x20\x20" + humidity;
+      } else {
+        weatherInfo.humidity = humidity;
+      }
 
       // 舒适指数
       const comfort = weatherJsonData.result.realtime.life_index.comfort.desc;
       log("舒适指数==>" + comfort);
-      weatherInfo.comfort = comfort;
+      if (comfort.length < 2) {
+        weatherInfo.comfort = "\x20\x20\x20\x20" + comfort;
+      } else {
+        weatherInfo.comfort = comfort;
+      }
 
       // 紫外线指数
       const ultraviolet =
         weatherJsonData.result.realtime.life_index.ultraviolet.desc;
       log("紫外线指数==>" + ultraviolet);
-      weatherInfo.ultraviolet = ultraviolet;
+      if (ultraviolet.length < 2) {
+        weatherInfo.ultraviolet = "\x20\x20\x20\x20" + ultraviolet;
+      } else {
+        weatherInfo.ultraviolet = ultraviolet;
+      }
 
       // 空气质量
       const aqi = weatherJsonData.result.realtime.air_quality.aqi.chn;
@@ -989,18 +1001,30 @@ async function getWeather() {
       const humidity =
         parseInt(weatherJsonData.result.realtime.humidity * 100) + "%";
       log("相对湿度==>" + humidity);
-      weatherInfo.humidity = humidity;
+      if (humidity.length < 3) {
+        weatherInfo.humidity = "\x20\x20\x20\x20" + humidity;
+      } else {
+        weatherInfo.humidity = humidity;
+      }
 
       // 舒适指数
       const comfort = weatherJsonData.result.realtime.life_index.comfort.desc;
       log("舒适指数==>" + comfort);
-      weatherInfo.comfort = comfort;
+      if (comfort.length < 2) {
+        weatherInfo.comfort = "\x20\x20\x20\x20" + comfort;
+      } else {
+        weatherInfo.comfort = comfort;
+      }
 
       // 紫外线指数
       const ultraviolet =
         weatherJsonData.result.realtime.life_index.ultraviolet.desc;
       log("紫外线指数==>" + ultraviolet);
-      weatherInfo.ultraviolet = ultraviolet;
+      if (ultraviolet.length < 2) {
+        weatherInfo.ultraviolet = "\x20\x20\x20\x20" + ultraviolet;
+      } else {
+        weatherInfo.ultraviolet = ultraviolet;
+      }
 
       // 空气质量
       const aqi = weatherJsonData.result.realtime.air_quality.aqi.chn;
