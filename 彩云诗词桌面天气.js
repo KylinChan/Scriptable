@@ -35,7 +35,7 @@ let locationData = {
   subLocality: undefined,
 };
 
-// 锁定地区，直接使用上述填写的地址信息不进行定位
+// 是否锁定地区，值为"true"时直接使用默认定位信息，值为"false"时先尝试定位，定位失败则使用定位缓存或默认定位信息
 const lockLocation = false;
 
 // 是否需要选择图片背景
@@ -1028,6 +1028,13 @@ async function getWeather() {
  **************************************
  */
 async function getLocation() {
+  // 设置定位信息缓存
+  const locationCache = files.joinPath(
+    files.documentsDirectory(),
+    "location-cache"
+  );
+  const cacheExists = files.fileExists(locationCache);
+
   if (!lockLocation) {
     try {
       const location = await Location.current();
@@ -1045,6 +1052,10 @@ async function getLocation() {
       locationData.subLocality = geo.subLocality;
       // 街道
       locationData.street = geo.thoroughfare;
+
+      // 将获得的定位数据写入缓存
+      files.writeString(locationCache, JSON.stringify(locationData));
+
       log(
         "定位信息：latitude=" +
           location.latitude +
@@ -1058,7 +1069,19 @@ async function getLocation() {
           locationData.street
       );
     } catch (e) {
-      log("定位出错了，" + e.toString());
+      if (cacheExists) {
+        // 读取定位数据缓存
+        const cache = files.readString(locationCache);
+        log("定位缓存数据获取成功");
+        // 转换定位数据为JSON格式
+        const locationJsonData = JSON.parse(cache);
+
+        locationData.latitude = locationJsonData.latitude;
+        locationData.longitude = locationJsonData.longitude;
+        locationData.locality = locationJsonData.locality;
+        locationData.subLocality = locationJsonData.subLocality;
+        locationData.street = locationJsonData.street;
+      }
     }
   }
 
