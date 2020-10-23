@@ -892,7 +892,8 @@ async function getWeather() {
       weatherInfo.weatherDesc = weatherDesc;
 
       // 相对湿度
-      const humidity = weatherJsonData.result.realtime.humidity * 100 + "%";
+      const humidity =
+        parseInt(weatherJsonData.result.realtime.humidity * 100) + "%";
       log("相对湿度==>" + humidity);
       weatherInfo.humidity = humidity;
 
@@ -927,6 +928,7 @@ async function getWeather() {
     if (cacheExists) {
       // 读取天气数据缓存
       const cache = files.readString(weatherCache);
+      log("天气缓存数据读取成功");
       // 转换天气数据为JSON格式
       const weatherJsonData = JSON.parse(cache);
 
@@ -962,7 +964,8 @@ async function getWeather() {
       weatherInfo.weatherDesc = weatherDesc;
 
       // 相对湿度
-      const humidity = weatherJsonData.result.realtime.humidity * 100 + "%";
+      const humidity =
+        parseInt(weatherJsonData.result.realtime.humidity * 100) + "%";
       log("相对湿度==>" + humidity);
       weatherInfo.humidity = humidity;
 
